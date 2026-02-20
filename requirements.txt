@@ -19,6 +19,3 @@ python-dotenv
 # Utilities
 tqdm
 numpy==1.26.4
-
-fastapi
-uvicorn[standard]
