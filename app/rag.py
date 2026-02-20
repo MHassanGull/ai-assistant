@@ -12,6 +12,7 @@ from .embeddings import embed_query
 from .vector_store import query_vectors
 
 
+
 # ===============================
 # Guards
 # ===============================
@@ -101,7 +102,12 @@ def retrieve_context(question: str, top_k: int = TOP_K) -> str:
 
     return "\n\n---\n\n".join(contexts)
 
+import re
 
+def clean_response(text: str) -> str:
+    # Remove <think>...</think>
+    text = re.sub(r"<think>.*?</think>", "", text, flags=re.DOTALL)
+    return text.strip()
 # ===============================
 # Final Answer Function
 # ===============================
@@ -131,5 +137,4 @@ ANSWER:
     messages.append({"role": "user", "content": user_prompt})
 
     response = chat_once(HF_CHAT_MODEL, messages)
-
-    return response
+    return clean_response(response)
