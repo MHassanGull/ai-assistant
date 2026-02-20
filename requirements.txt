@@ -1,0 +1,24 @@
+# Backend core
+fastapi
+uvicorn[standard]
+pydantic
+
+# Web Scraping
+httpx
+beautifulsoup4
+lxml
+
+# Retrieval & Sync
+pinecone
+tenacity
+openai
+langchain-huggingface
+sentence-transformers
+python-dotenv
+
+# Utilities
+tqdm
+numpy==1.26.4
+
+fastapi
+uvicorn[standard]
