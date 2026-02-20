@@ -147,6 +147,13 @@ async def chat(request: Request, data: ChatRequest):
         }
 
     except Exception as e:
+        # Catch HuggingFace / OpenAI rate limits specifically
+        if "429" in str(e) or "rate limit" in str(e).lower():
+            raise HTTPException(
+                status_code=429,
+                detail="HuggingFace API limit reached. Please try again later."
+            )
+
         raise HTTPException(
             status_code=500,
             detail=str(e)

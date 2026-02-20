@@ -22,7 +22,10 @@ if not PINECONE_API_KEY:
 
 pc = Pinecone(api_key=PINECONE_API_KEY)
 
-existing_indexes = {i["name"] for i in pc.list_indexes()}
+try:
+    existing_indexes = {i["name"] for i in pc.list_indexes()}
+except Exception as e:
+    raise RuntimeError(f"❌ Pinecone Connection Error: Failed to list indexes. Details: {e}")
 
 if PINECONE_INDEX_NAME not in existing_indexes:
     print(f"🚀 Creating Pinecone index: {PINECONE_INDEX_NAME}")
@@ -41,17 +44,21 @@ if PINECONE_INDEX_NAME not in existing_indexes:
             break
         time.sleep(2)
 
-# Validate dimension
-desc = pc.describe_index(PINECONE_INDEX_NAME)
+try:
+    # Validate dimension
+    desc = pc.describe_index(PINECONE_INDEX_NAME)
 
-if desc.dimension != EXPECTED_DIM:
-    raise RuntimeError(
-        f"Pinecone dimension mismatch: index={desc.dimension}, expected={EXPECTED_DIM}"
-    )
+    if desc.dimension != EXPECTED_DIM:
+        raise RuntimeError(
+            f"❌ Pinecone Dimension Mismatch: Index is {desc.dimension}-dim, but model generates {EXPECTED_DIM}-dim. Please recreate index."
+        )
 
-index = pc.Index(PINECONE_INDEX_NAME)
-
-print(f"✅ Pinecone ready (dim={desc.dimension})")
+    index = pc.Index(PINECONE_INDEX_NAME)
+    print(f"✅ Pinecone Ready (Namespace: {NAMESPACE})")
+except Exception as e:
+    if "401" in str(e):
+        raise RuntimeError("❌ Pinecone Authentication Error: Check your PINECONE_API_KEY.")
+    raise RuntimeError(f"❌ Pinecone Initialization Error: {e}")
 
 # ===============================
 # Public Functions

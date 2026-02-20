@@ -3,4 +3,9 @@ venv/
 __pycache__/
 *.pyc
 .git/
+.gitattributes
 data/
+*.md
+Dockerfile
+.dockerignore
+!README.md

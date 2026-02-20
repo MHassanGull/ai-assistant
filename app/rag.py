@@ -79,7 +79,10 @@ def pick_model():
             last_error = e
             continue
 
-    raise RuntimeError(f"No working HF model found. Last error: {last_error}")
+    raise RuntimeError(
+        f"❌ HuggingFace Model Error: No candidate models were available or responsive. "
+        f"Last error encountered: {last_error}. Check HF_TOKEN and Space resources."
+    )
 
 
 HF_CHAT_MODEL = pick_model()
